@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MinhaApiRest.API/MinhaApiRest.API.csproj" />
+  <Project Path="MinhaApiRest.Application/MinhaApiRest.Application.csproj" />
+  <Project Path="MinhaApiRest.Domain/MinhaApiRest.Domain.csproj" />
+  <Project Path="MinhaApiRest.Infra/MinhaApiRest.Infra.csproj" />
+</Solution>
