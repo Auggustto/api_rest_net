@@ -10,6 +10,11 @@ docker build \
   -t meu-mysql \
   "$ROOT_DIR"
 
+if docker ps -a --format '{{.Names}}' | grep -q '^mysql-container$'; then
+    echo "Container mysql-container encontrado. Removendo..."
+    docker rm -f mysql-container
+fi
+
 docker run -d \
   --name mysql-container \
   -p 3306:3306 \
