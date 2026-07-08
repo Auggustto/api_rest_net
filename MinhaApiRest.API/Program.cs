@@ -1,43 +1,38 @@
+using System;
+using Microsoft.EntityFrameworkCore;
+using MinhaApiRest.Infra.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Usar Swagger (Swashbuckle) para .NET 8
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var envConn = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+var connectionString = !string.IsNullOrWhiteSpace(envConn)
+    ? envConn
+    : builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    Console.Error.WriteLine("[ERROR] Connection string 'DefaultConnection' not found.");
+    return;
+}
+
+ServerVersion serverVersion;
+try
+{
+    serverVersion = ServerVersion.AutoDetect(connectionString);
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"[ERROR] Could not detect MySQL server version: {ex.Message}");
+    throw;
+}
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(connectionString, serverVersion));
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
+app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
