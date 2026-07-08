@@ -5,10 +5,11 @@
       "name": "🚀 Minha API REST",
       "type": "coreclr",
       "request": "launch",
+      "console": "integratedTerminal",
       "preLaunchTask": "build",
       "program": "${workspaceFolder}/MinhaApiRest.API/bin/Debug/net8.0/MinhaApiRest.API.dll",
       "args": [],
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/MinhaApiRest.API",
       "stopAtEntry": false,
       "serverReadyAction": {
         "pattern": "\\bNow listening on:\\s+(https?://\\S+)",

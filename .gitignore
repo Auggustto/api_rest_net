@@ -133,3 +133,4 @@ $RECYCLE.BIN/
 _NCrunch*
 
 .env
+MinhaApiRest.API/appsettings.Development.json
